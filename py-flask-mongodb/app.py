@@ -1,8 +1,7 @@
 import json
 
-from bson.objectid import ObjectId
-
 import pymongo
+from bson.objectid import ObjectId
 from flask import Flask, Response, request
 
 app = Flask(__name__)
@@ -49,6 +48,43 @@ def create_user():
     except Exception as ex:
         print(ex)
         return "xxxxx"
+
+
+@app.route("/users/<id>", methods=["PATCH"])
+def update_user(id):
+    try:
+        dbResponse = db.users.update_one(
+            {"_id": ObjectId(id)},
+            {"$set": {"name": request.form["name"]}}
+        )
+        if dbResponse.modified_count == 1:
+            return Response(response=json.dumps({"message": f"User has been updated"}), status=200,
+                            mimetype="application/json")
+
+        return Response(response=json.dumps({"message": f"Nothing to update"}), status=200,
+                        mimetype="application/json")
+    except Exception as ex:
+        print(ex)
+        return Response(response=json.dumps({"message": f"Cannot udate user with id: {id}"}), status=500,
+                        mimetype="application/json")
+
+
+@app.route("/users/<id>", methods=["DELETE"])
+def delete_user(id):
+    try:
+        dbResponse = db.users.delete_one(
+            {"_id": ObjectId(id)},
+        )
+        if dbResponse.deleted_count == 1:
+            return Response(response=json.dumps({"message": f"User has been deleted: {id}"}), status=200,
+                            mimetype="application/json")
+
+        return Response(response=json.dumps({"message": f"Nothing to delete"}), status=200,
+                        mimetype="application/json")
+    except Exception as ex:
+        print(ex)
+        return Response(response=json.dumps({"message": f"Cannot delete user with id: {id}"}), status=500,
+                        mimetype="application/json")
 
 
 if __name__ == '__main__':
