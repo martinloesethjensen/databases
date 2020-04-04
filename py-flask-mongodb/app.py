@@ -1,5 +1,7 @@
 import json
 
+from bson.objectid import ObjectId
+
 import pymongo
 from flask import Flask, Response, request
 
@@ -11,6 +13,19 @@ try:
     mongo.server_info()  # Trigger exception
 except:
     print("Error connecting to the database")
+
+
+@app.route("/users", methods=["GET"])
+def get_users():
+    try:
+        data = list(db.users.find())
+
+        for user in data:
+            user["_id"] = str(user["_id"])
+        return Response(response=json.dumps(data), status=200, mimetype="application/json")
+    except Exception as ex:
+        print(ex)
+        return Response(response=json.dumps({"message": "Cannot read users"}), status=500, mimetype="application/json")
 
 
 @app.route('/users', methods=["POST"])
