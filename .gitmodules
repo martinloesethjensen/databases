@@ -1,0 +1,9 @@
+[submodule "kt-orm-mandatory"]
+	path = kt-orm-mandatory
+	url = https://github.com/martinloesethjensen/kt-orm-mandatory.git
+[submodule "py-flask-mongodb"]
+	path = py-flask-mongodb
+	url = https://github.com/martinloesethjensen/py-flask-mongodb.git
+[submodule "py-sqlite3"]
+	path = py-sqlite3
+	url = https://github.com/martinloesethjensen/py-sqlite3.git
